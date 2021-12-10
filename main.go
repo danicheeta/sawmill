@@ -2,21 +2,16 @@ package main
 
 import (
 	"fmt"
+	"sawmill/perm"
 )
-
-var current []int
-var visited []bool
 
 func main() {
 	input := []int{2, 3, 1}
 
-	visited = make([]bool, len(input))
-	for i := range visited {
-		visited[i] = false
-	}
 
-	println(getProfit(input, 3))
-	// getPermutations(input)
+	p := perm.New(input)
+	perms := p.GetPermutations()
+	fmt.Printf("%+v", perms)
 }
 
 func getProfit(input []int, del int) int {
@@ -28,13 +23,13 @@ func getProfit(input []int, del int) int {
 			curr = curr + i - 4
 			profit += profitOnBlock(i - curr)
 			profit += profitOnBlock(curr)
-		} else {
-			profit += profitOnBlock(i)
-			curr += i
+		}
 
-			if curr == 4 {
-				curr = 0
-			}
+		profit += profitOnBlock(i)
+		curr += i
+
+		if curr == 4 {
+			curr = 0
 		}
 	}
 
@@ -56,31 +51,6 @@ func profitOnBlock(l int) int {
 	}
 }
 
-func getPermutations(input []int) {
-	if len(current) == len(input) {
-		fmt.Printf("%+v", current)
-	}
-
-	for i := 0; i < len(input); i++ {
-		if visited[i] {
-			continue
-		}
-
-		if i > 0 && input[i] == input[i-1] && visited[i-1] {
-			continue
-		}
-
-		visited[i] = true
-
-		current = append(current, input[i])
-
-		getPermutations(input)
-
-		visited[i] = false
-
-		current = current[:len(current)-1]
-	}
-}
 
 // func readFromStdin() map[int][][]int {
 // 	scanner := bufio.NewScanner(os.Stdin)
